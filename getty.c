@@ -1,4 +1,3 @@
-#
 /*
  * getty -- adapt to terminal speed on dialup, and call login
  */
