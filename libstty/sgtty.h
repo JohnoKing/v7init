@@ -116,3 +116,4 @@ struct tchars {
 #define	MXNBLK		(('x'<<8)|2)
 
 extern int stty();
+extern int gtty();
