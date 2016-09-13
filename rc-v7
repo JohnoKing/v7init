@@ -10,4 +10,12 @@ accton /etc/default/acct
 rm -rf /usr/tmp/*
 rm -rf /tmp/*
 uname -a > /dev/console
+
+if [ "$(cat /etc/hostname)" != "" ]
+then
+    hostname $(cat /etc/hostname)
+else
+    hostname localhost
+fi
+
 sh /etc/rc-v7.d/*.sh
