@@ -1,17 +1,20 @@
 #include <fcntl.h>
+#include <setjmp.h>
 #include <signal.h>
 #include <stdlib.h>
 #include <unistd.h>
 #include <utmp.h>
-#include <setjmp.h>
+
+#include <sys/stat.h>
 #include <sys/types.h>
+#include <sys/wait.h>
 
 #define	TABSIZ	100
 #define	ALL	p = &itab[0]; p < &itab[TABSIZ]; p++
 #define	EVER	;;
 
 char	shell[]	= "/bin/sh";
-char	getty[]	 = "/bin/getty-v7";
+char	getty[]	= "/sbin/getty-v7";
 char	minus[]	= "-";
 char	runc[]	= "/etc/rc-v7";
 char	ifile[]	= "/etc/ttys";
@@ -38,29 +41,59 @@ int	fi;
 char	tty[20];
 jmp_buf	sjbuf;
 
-reset()
+int reset()
 {
 	longjmp(sjbuf, 1);
 }
 
-main()
+void rmut(p)
+register struct tab *p;
 {
-	int reset();
+	register int i, f;
 
-	setjmp(sjbuf);
-	signal(SIGHUP, reset);
-	for(EVER) {
-		shutdown();
-		single();
-		runcom();
-		merge();
-		multiple();
+	f = open(utmp, 2);
+	if(f >= 0) {
+		while(read(f, (char *)&wtmp, sizeof(wtmp)) == sizeof(wtmp)) {
+			for(i=0; i<8; i++)
+				if(wtmp.ut_line[i] != p->line[i])
+					goto contin;
+			lseek(f, -(long)sizeof(wtmp), 1);
+			for(i=0; i<8; i++)
+				wtmp.ut_name[i] = 0;
+			time(&wtmp.ut_time);
+			write(f, (char *)&wtmp, sizeof(wtmp));
+		contin:;
+		}
+		close(f);
+	}
+	f = open(wtmpf, 1);
+	if (f >= 0) {
+		for(i=0; i<8; i++) {
+			wtmp.ut_name[i] = 0;
+			wtmp.ut_line[i] = p->line[i];
+		}
+		time(&wtmp.ut_time);
+		lseek(f, (long)0, 2);
+		write(f, (char *)&wtmp, sizeof(wtmp));
+		close(f);
 	}
 }
 
-shutdown()
+void term(p)
+register struct tab *p;
 {
-	register i;
+
+	if(p->pid != 0) {
+		rmut(p);
+		kill(p->pid, SIGKILL);
+	}
+	p->pid = 0;
+	p->line[0] = 0;
+}
+
+void shutdown()
+{
+	register int i;
 	register struct tab *p;
 
 	signal(SIGINT, SIG_IGN);
@@ -78,9 +111,9 @@ shutdown()
 		close(i);
 }
 
-single()
+void single()
 {
-	register pid;
+	register int pid;
 
 	pid = fork();
 	if(pid == 0) {
@@ -100,9 +133,9 @@ single()
 		;
 }
 
-runcom()
+void runcom()
 {
-	register pid;
+	register int pid;
 
 	pid = fork();
 	if(pid == 0) {
@@ -116,38 +149,56 @@ runcom()
 		;
 }
 
-multiple()
+void maktty(char *lin)
 {
-	register struct tab *p;
-	register pid;
+	register int i, j;
 
-	for(EVER) {
-		pid = wait((int *)0);
-		if(pid == -1)
-			return;
-		for(ALL)
-			if(p->pid == pid || p->pid == -1) {
-				rmut(p);
-				dfork(p);
-			}
+	for(i=0; dev[i]; i++)
+		tty[i] = dev[i];
+	for(j=0; lin[j]; j++) {
+		tty[i] = lin[j];
+		i++;
 	}
+	tty[i] = 0;
 }
 
-term(p)
-register struct tab *p;
+void dfork(p)
+struct tab *p;
 {
+	register int pid;
 
-	if(p->pid != 0) {
-		rmut(p);
-		kill(p->pid, SIGKILL);
+	pid = fork();
+	if(pid == 0) {
+		signal(SIGHUP, SIG_DFL);
+		signal(SIGINT, SIG_DFL);
+		maktty(p->line);
+		chown(tty, 0, 0);
+		chmod(tty, 0622);
+		open(tty, 2);
+		dup(0);
+		dup(0);
+		tty[0] = p->comn;
+		tty[1] = 0;
+		execl(getty, minus, tty, (char *)0);
+		exit(0);
 	}
-	p->pid = 0;
-	p->line[0] = 0;
+	p->pid = pid;
 }
 
-rline()
+int get()
 {
-	register c, i;
+	char b;
+
+	if(read(fi, &b, 1) != 1)
+		return(-1);
+	if(b == '\n')
+		return(0);
+	return(b);
+}
+
+int rline()
+{
+	register int c, i;
 
 	c = get();
 	if(c < 0)
@@ -179,35 +230,10 @@ bad:
 	return(1);
 }
 
-maktty(lin)
-char *lin;
-{
-	register i, j;
-
-	for(i=0; dev[i]; i++)
-		tty[i] = dev[i];
-	for(j=0; lin[j]; j++) {
-		tty[i] = lin[j];
-		i++;
-	}
-	tty[i] = 0;
-}
-
-get()
-{
-	char b;
-
-	if(read(fi, &b, 1) != 1)
-		return(-1);
-	if(b == '\n')
-		return(0);
-	return(b);
-}
-
-merge()
+void merge()
 {
 	register struct tab *p, *q;
-	register i;
+	register int i;
 
 	close(creat(utmp, 0644));
 	signal(SIGINT, merge);
@@ -248,58 +274,34 @@ merge()
 			dfork(p);
 }
 
-dfork(p)
-struct tab *p;
+void multiple()
 {
-	register pid;
+	register struct tab *p;
+	register int pid;
 
-	pid = fork();
-	if(pid == 0) {
-		signal(SIGHUP, SIG_DFL);
-		signal(SIGINT, SIG_DFL);
-		maktty(p->line);
-		chown(tty, 0, 0);
-		chmod(tty, 0622);
-		open(tty, 2);
-		dup(0);
-		dup(0);
-		tty[0] = p->comn;
-		tty[1] = 0;
-		execl(getty, minus, tty, (char *)0);
-		exit(0);
+	for(EVER) {
+		pid = wait((int *)0);
+		if(pid == -1)
+			return;
+		for(ALL)
+			if(p->pid == pid || p->pid == -1) {
+				rmut(p);
+				dfork(p);
+			}
 	}
-	p->pid = pid;
 }
 
-rmut(p)
-register struct tab *p;
+int main()
 {
-	register i, f;
+	int reset();
 
-	f = open(utmp, 2);
-	if(f >= 0) {
-		while(read(f, (char *)&wtmp, sizeof(wtmp)) == sizeof(wtmp)) {
-			for(i=0; i<8; i++)
-				if(wtmp.ut_line[i] != p->line[i])
-					goto contin;
-			lseek(f, -(long)sizeof(wtmp), 1);
-			for(i=0; i<8; i++)
-				wtmp.ut_name[i] = 0;
-			time(&wtmp.ut_time);
-			write(f, (char *)&wtmp, sizeof(wtmp));
-		contin:;
-		}
-		close(f);
-	}
-	f = open(wtmpf, 1);
-	if (f >= 0) {
-		for(i=0; i<8; i++) {
-			wtmp.ut_name[i] = 0;
-			wtmp.ut_line[i] = p->line[i];
-		}
-		time(&wtmp.ut_time);
-		lseek(f, (long)0, 2);
-		write(f, (char *)&wtmp, sizeof(wtmp));
-		close(f);
+	setjmp(sjbuf);
+	signal(SIGHUP, reset);
+	for(EVER) {
+		shutdown();
+		single();
+		runcom();
+		merge();
+		multiple();
 	}
 }

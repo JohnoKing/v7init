@@ -114,3 +114,5 @@ struct tchars {
 #define	FIONCLEX	(('f'<<8)|2)
 #define	MXLSTN		(('x'<<8)|1)
 #define	MXNBLK		(('x'<<8)|2)
+
+extern int stty();

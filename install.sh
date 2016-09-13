@@ -18,18 +18,18 @@ fi
 
 # Build and install libstty
 cd libstty
-$CC -c -O2 -ffast-math stty.c
+$CC -c -O2 stty.c
 ar cr libstty.a stty.o
 rm stty.o
 sudo mv libstty.a /lib
 cd ..
 
 # Build and install getty, init (the program itself), and the rc script
-$CC -c -O2 -ffast-math getty.c init.c
+$CC -c -O2 getty.c init.c
 $CC -o getty-v7 getty.o -lstty
 $CC -o init-v7 init.o
 rm *.o
-sudo mv getty-v7 init-v7 /bin
+sudo mv getty-v7 init-v7 /sbin
 sudo cp rc-v7 /etc
 
 # Allow the user to edit the rc script

@@ -4,13 +4,13 @@
 
 #include "sgtty.h"
 
-stty(fd, ap)
+int stty(fd, ap)
 struct sgtty *ap;
 {
 	return(ioctl(fd, TIOCSETP, ap));
 }
 
-gtty(fd, ap)
+int gtty(fd, ap)
 struct sgtty *ap;
 {
 	return(ioctl(fd, TIOCGETP, ap));

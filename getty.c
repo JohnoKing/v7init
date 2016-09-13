@@ -6,7 +6,9 @@
 #include <stdlib.h>
 #include <stropts.h>
 #include <unistd.h>
+
 #include "libstty/sgtty.h"
+
 #define ERASE	'#'
 #define KILL	'@'
 
@@ -20,87 +22,8 @@ struct	tab {
 	int	fflags;		/* final flags */
 	int	ispeed;		/* input speed */
 	int	ospeed;		/* output speed */
-	char	*message;	/* login message */
-} itab[] = {
-
-/* table '0'-1-2-3 300,1200,150,110 */
-
-	'0', 1,
-	ANYP+RAW+NL1+CR1, ANYP+ECHO+CR1,
-	B300, B300,
-	"\n\r\033;\007login: ",
-
-	1, 2,
-	ANYP+RAW+NL1+CR1, ANYP+XTABS+ECHO+CRMOD+FF1,
-	B1200, B1200,
-	"\n\r\033;login: ",
-
-	2, 3,
-	ANYP+RAW+NL1+CR1, EVENP+ECHO+FF1+CR2+TAB1+NL1,
-	B150, B150,
-	"\n\r\033:\006\006\017login: ",
-
-	3, '0',
-	ANYP+RAW+NL1+CR1, ANYP+ECHO+CRMOD+XTABS+LCASE+CR1,
-	B110, B110,
-	"\n\rlogin: ",
-
-/* table '-' -- Console TTY 110 */
-	'-', '-',
-	ANYP+RAW+NL1+CR1, ANYP+ECHO+CRMOD+XTABS+LCASE+CR1,
-	B110, B110,
-	"\n\rlogin: ",
-
-/* table '1' -- 150 */
-	'1', '1',
-	ANYP+RAW+NL1+CR1, EVENP+ECHO+FF1+CR2+TAB1+NL1,
-	B150, B150,
-	"\n\r\033:\006\006\017login: ",
-
-/* table '2' -- 9600 */
-	'2', '2',
-	ANYP+RAW+NL1+CR1, ANYP+XTABS+ECHO+CRMOD+FF1,
-	B9600, B9600,
-	"\n\r\033;login: ",
-
-/* table '3'-'5' -- 1200,300 */
-	'3', '5',
-	ANYP+RAW+NL1+CR1, ANYP+XTABS+ECHO+CRMOD+FF1,
-	B1200, B1200,
-	"\n\r\033;login: ",
-
-/* table '5'-'3' -- 300,1200 */
-	'5', '3',
-	ANYP+RAW+NL1+CR1, ANYP+ECHO+CR1,
-	B300, B300,
-	"\n\r\033;\007login: ",
-
-/* table '4' -- Console Decwriter */
-	'4', '4',
-	ANYP+RAW, ANYP+ECHO+CRMOD+XTABS,
-	B300, B300,
-	"\n\rlogin: ",
-
-/* table 'i' -- Interdata Console */
-	'i', 'i',
-	RAW+CRMOD, CRMOD+ECHO+LCASE,
-	0, 0,
-	"\n\rlogin: ",
-
-/* table 'l' -- LSI Chess Terminal */
-	'l', 'l',
-	ANYP+RAW/*+HUPCL*/, ANYP+ECHO/*+HUPCL*/,
-	B300, B300,
-	"*",
-/* table '6' -- 2400 11/23 line */
-	'6', '6',
-	ANYP+RAW+NL1+CR1, ANYP+ECHO,
-	B2400, B2400,
-	"\n\rlogin: ",
-
 };
 
-#define	NITAB	sizeof itab/sizeof itab[0]
 #define	EOT	04		/* EOT char */
 
 char	name[16];
@@ -127,60 +50,27 @@ char partab[] = {
 	0000,0200,0200,0000,0200,0000,0000,0201
 };
 
-main(argc, argv)
-char **argv;
+void putchr(cc)
 {
-	register struct tab *tabp;
-	int tname;
-
-	tname = '0';
-	if (argc > 1)
-		tname = argv[1][0];
-	switch (tname) {
-
-	case '3':		/* adapt to connect speed (212) */
-		ioctl(0, TIOCGETP, &tmode);
-		if (tmode.sg_ispeed==B300)
-			tname = '0';
-		else
-			tname = '3';
-		break;
-	}
-	for (;;) {
-		for(tabp = itab; tabp < &itab[NITAB]; tabp++)
-			if(tabp->tname == tname)
-				break;
-		if(tabp >= &itab[NITAB])
-			tabp = itab;
-		tmode.sg_flags = tabp->iflags;
-		tmode.sg_ispeed = tabp->ispeed;
-		tmode.sg_ospeed = tabp->ospeed;
-		ioctl(0, TIOCSETP, &tmode);
-		ioctl(0, TIOCSETC, &tchars);
-		puts(tabp->message);
-		if(getname()) {
-			tmode.sg_erase = ERASE;
-			tmode.sg_kill = KILL;
-			tmode.sg_flags = tabp->fflags;
-			if(crmod)
-				tmode.sg_flags |= CRMOD;
-			if(upper)
-				tmode.sg_flags |= LCASE;
-			if(lower)
-				tmode.sg_flags &= ~LCASE;
-			stty(0, &tmode);
-			putchr('\n');
-			execl("/bin/login", "login", name, 0);
-			exit(1);
-		}
-		tname = tabp->nname;
-	}
+	char c;
+	c = cc;
+	c |= partab[c&0177] & 0200;
+	write(1, &c, 1);
 }
 
-getname()
+void puts(char *as)
+{
+	register char *s;
+
+	s = as;
+	while (*s)
+		putchr(*s++);
+}
+
+int getname()
 {
 	register char *np;
-	register c;
+	register int c;
 	char cs;
 
 	crmod = 0;
@@ -221,20 +111,40 @@ getname()
 	return(1);
 }
 
-puts(as)
-char *as;
+int main(int argc, char **argv)
 {
-	register char *s;
+	int tname;
 
-	s = as;
-	while (*s)
-		putchr(*s++);
-}
+	tname = '0';
+	if (argc > 1)
+		tname = argv[1][0];
+	switch (tname) {
 
-putchr(cc)
-{
-	char c;
-	c = cc;
-	c |= partab[c&0177] & 0200;
-	write(1, &c, 1);
+	case '3':		/* adapt to connect speed (212) */
+		ioctl(0, TIOCGETP, &tmode);
+		if (tmode.sg_ispeed==B300)
+			tname = '0';
+		else
+			tname = '3';
+		break;
+	}
+	for (;;) {
+		ioctl(0, TIOCSETP, &tmode);
+		ioctl(0, TIOCSETC, &tchars);
+		puts("login: ");
+		if(getname()) {
+			tmode.sg_erase = ERASE;
+			tmode.sg_kill = KILL;
+			if(crmod)
+				tmode.sg_flags |= CRMOD;
+			if(upper)
+				tmode.sg_flags |= LCASE;
+			if(lower)
+				tmode.sg_flags &= ~LCASE;
+			stty(0, &tmode);
+			putchr('\n');
+			execl("/bin/login", "login", name, 0);
+			exit(1);
+		}
+	}
 }
