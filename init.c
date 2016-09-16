@@ -162,8 +162,7 @@ void maktty(char *lin)
 	tty[i] = 0;
 }
 
-void dfork(p)
-struct tab *p;
+void dfork(struct tab *p)
 {
 	register int pid;
 
