@@ -1,7 +1,7 @@
 #!/bin/sh
 
-# Function for when compiling fails
-failcompile()
+# Check if the compiled failed
+check()
 {
     if [ $? != 0 ]
     then
@@ -28,11 +28,11 @@ fi
 
 # Build getty and init
 $CC -c -O2 getty.c init.c
-failcompile
+check
 $CC -o getty-v7 getty.o
-failcompile
+check
 $CC -o init-v7 init.o
-failcompile
+check
 rm *.o
 
 # Installation
@@ -40,7 +40,6 @@ rm *.o
 # Allow the user to edit the rc script
 editrc()
 {
-    echo "Would you like to edit the init script (/etc/rc-v7)? Press 1 for yes, 2 for no:"
     read -n1 editinit && echo
     if [ $editinit = 1 ]
     then
@@ -50,7 +49,6 @@ editrc()
         command
     else
         echo "Please press 1 or 2."
-        echo
         editrc
     fi
 }
@@ -62,6 +60,7 @@ installv7()
 
     # Install the scripts
     sudo cp rc-v7 /etc
+    echo "Would you like to edit the init script (/etc/rc-v7)? Press 1 for yes, 2 for no:"
     editrc
     if [ ! -e /etc/rc-v7.d ]
     then

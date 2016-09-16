@@ -1,1 +1,1 @@
-echo "Example script run." > /dev/console
+uname -a > /dev/console
