@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Check if the compiled failed
+# Check if the compile failed
 check()
 {
     if [ $? != 0 ]
