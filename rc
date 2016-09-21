@@ -9,6 +9,7 @@ swapon /dev/sda3
 accton /etc/default/acct
 rm -rf /usr/tmp/*
 rm -rf /tmp/*
+uname -a > /dev/console
 
 if [ "$(cat /etc/hostname)" != "" ]
 then
@@ -17,4 +18,7 @@ else
     hostname localhost
 fi
 
-sh /etc/rc-v7.d/*.sh
+if [ -e /etc/rc.d ]
+then
+	sh /etc/rc.d/*.sh
+fi

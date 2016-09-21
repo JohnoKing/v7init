@@ -18,9 +18,9 @@
 #define EVER ;;
 
 static char shell[] = "/bin/sh";
-static char getty[] = "/sbin/getty-v7";
+static char getty[] = "/sbin/getty";
 static char minus[] = "-";
-static char runc[] = "/etc/rc-v7";
+static char runc[] = "/etc/rc";
 static char ifile[] = "/etc/ttys";
 static char utmp[] = "/etc/utmp";
 static char wtmpf[] = "/var/log/wtmp";
