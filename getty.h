@@ -4,11 +4,11 @@
 
 struct sgetty
 {
-    char sg_ispeed; /* input speed */
-    char sg_ospeed; /* output speed */
-    char sg_erase; /* erase character */
-    char sg_kill; /* kill character */
-    int sg_flags; /* mode flags */
+    char sg_ispeed; // input speed
+    char sg_ospeed; // output speed
+    char sg_erase; // erase character
+    char sg_kill; // kill character
+    int sg_flags; // mode flags
 };
 
 #define LCASE 04

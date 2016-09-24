@@ -15,7 +15,7 @@
 
 struct sgetty static tmode;
 
-#define EOT 04 /* EOT char */
+#define EOT 04 // EOT char
 
 static char name[16];
 static int crmod;
@@ -87,7 +87,7 @@ int main(int argc, char **argv)
         tname = argv[1][0];
     switch(tname)
     {
-    case '3': /* adapt to connect speed (212) */
+    case '3': // adapt to connect speed (212)
         ioctl(0, TIOCGETP, &tmode);
         if(tmode.sg_ispeed==B300)
             tname = '0';
