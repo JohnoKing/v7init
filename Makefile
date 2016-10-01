@@ -1,23 +1,20 @@
 CC=gcc
-CFLAGS=-c -O2
-LDFLAGS=-o
+CFLAGS=-O2 -o
 
-all: getty.o init.o
+all: getty init
 
-getty.o:
-	$(CC) $(CFLAGS) getty.c
-	$(CC) $(LDFLAGS) getty getty.o
+getty:
+	$(CC) $(CFLAGS) getty getty.c
 
-init.o:
-	$(CC) $(CFLAGS) init.c
-	$(CC) $(LDFLAGS) init init.o
+init:
+	$(CC) $(CFLAGS) init init.c
 
 install: all
 	cp init getty /sbin
 	cp rc /etc
+	chmod +x /etc/rc
 
 clean:
-	rm *.o
+	rm -f getty init
 
 clobber: clean
-	rm getty init
