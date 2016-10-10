@@ -70,7 +70,7 @@ static int getname()
         }
         else if(c == ' ')
             c = '_';
-        *np++ = c;
+        *np++ = (char)c;
     }
     *np = 0;
     if(c == '\r')
