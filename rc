@@ -7,7 +7,6 @@ mount /dev/sda2 /
 mount /dev/sda1 /boot
 swapon /dev/sda3
 accton /etc/default/acct
-rm -rf /usr/tmp/*
 rm -rf /tmp/*
 uname -a > /dev/console
 
