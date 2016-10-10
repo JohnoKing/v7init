@@ -22,11 +22,6 @@ static int crmod;
 static int upper;
 static int lower;
 
-static void putchr(char c)
-{
-    write(1, &c, 1);
-}
-
 static int getname()
 {
     char cs;
@@ -37,6 +32,7 @@ static int getname()
     upper = 0;
     lower = 0;
     np = name;
+
     for(;;)
     {
         if(read(0, &cs, 1) <= 0)
@@ -47,7 +43,7 @@ static int getname()
             exit(1);
         if(c=='\r' || c=='\n' || np >= &name[16])
             break;
-        putchr(cs);
+        write(1, &cs, 1);
         if(c>='a' && c <='z')
             lower++;
         else if(c>='A' && c<='Z')
@@ -63,8 +59,7 @@ static int getname()
         }
         else if(c==KILL)
         {
-            putchr('\r');
-            putchr('\n');
+            printf("\r\n");
             np = name;
             continue;
         }
@@ -72,17 +67,18 @@ static int getname()
             c = '_';
         *np++ = (char)c;
     }
+
     *np = 0;
     if(c == '\r')
         crmod++;
+
     return 1;
 }
 
 int main(int argc, char **argv)
 {
-    int tname;
+    int tname = 0;
 
-    tname = '0';
     if(argc > 1)
         tname = argv[1][0];
     switch(tname)
@@ -95,6 +91,7 @@ int main(int argc, char **argv)
             tname = '3';
         break;
     }
+
     for(;;)
     {
         ioctl(0, TIOCSETP, &tmode);
@@ -110,7 +107,7 @@ int main(int argc, char **argv)
             if(lower)
                 tmode.sg_flags &= ~LCASE;
 			ioctl(0, TIOCSETP, &tmode);
-            putchr('\n');
+            printf("\n");
             execl("/bin/login", "login", name, 0);
             exit(1);
         }
