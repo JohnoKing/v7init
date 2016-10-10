@@ -10,9 +10,8 @@ init:
 	$(CC) $(CFLAGS) init init.c
 
 install: all
-	cp init getty /sbin
-	cp rc /etc
-	chmod +x /etc/rc
+	install -Dm755 init getty $(DESTDIR)/sbin
+	install -Dm755 rc $(DESTDIR)/etc
 
 clean:
 	rm -f getty init
