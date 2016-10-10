@@ -81,6 +81,7 @@ int main(int argc, char **argv)
 
     if(argc > 1)
         tname = argv[1][0];
+
     switch(tname)
     {
     case '3': // adapt to connect speed (212)
