@@ -12,6 +12,7 @@ init:
 install: all
 	install -Dm755 init getty $(DESTDIR)/sbin
 	install -Dm755 rc $(DESTDIR)/etc
+	install -Dm644 ttys $(DESTDIR)/etc
 
 clean:
 	rm -f getty init

@@ -2,16 +2,16 @@
  * init -- init program
  */
 
+#include <sys/stat.h>
+#include <sys/types.h>
+#include <sys/wait.h>
+
 #include <fcntl.h>
 #include <setjmp.h>
 #include <signal.h>
 #include <stdlib.h>
 #include <unistd.h>
 #include <utmp.h>
-
-#include <sys/stat.h>
-#include <sys/types.h>
-#include <sys/wait.h>
 
 #define TABSIZ 100
 #define ALL p = &itab[0]; p < &itab[TABSIZ]; p++
@@ -120,9 +120,8 @@ static void shutdown()
 
 static void single()
 {
-    int pid;
+    int pid = fork();
 
-    pid = fork();
     if(pid == 0)
     {
         signal(SIGHUP, SIG_DFL);
@@ -139,9 +138,8 @@ static void single()
 
 static void runcom()
 {
-    int pid;
+    int pid = fork();
 
-    pid = fork();
     if(pid == 0)
     {
         open("/", 0);
@@ -169,9 +167,8 @@ static void maktty(char *lin)
 
 static void dfork(struct tab *p)
 {
-    int pid;
+    int pid = fork();
 
-    pid = fork();
     if(pid == 0) {
         signal(SIGHUP, SIG_DFL);
         signal(SIGINT, SIG_DFL);
