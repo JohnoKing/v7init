@@ -2,8 +2,8 @@
 
 if [ "$STATUS" = "0" ]
 then
-	echo "$SERVICE started."
+	echo "$SERVICE started." > /dev/console
 else
-	echo "$SERVICE failed to start."
+	echo "$SERVICE failed to start." > /dev/console
 	exit 1
 fi
