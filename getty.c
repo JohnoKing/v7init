@@ -10,12 +10,9 @@
 
 #include "getty.h"
 
+#define EOT 04 // EOT char
 #define ERASE '#'
 #define KILL '@'
-
-struct sgetty static tmode;
-
-#define EOT 04 // EOT char
 
 static char name[16];
 static int crmod;

@@ -53,9 +53,8 @@ static int reset()
 
 static void rmut(struct tab *p)
 {
-    int i, f;
+    int i, f = open(utmp, 2);
 
-    f = open(utmp, 2);
     if(f >= 0)
     {
         while(read(f, (char *)&wtmp, sizeof(wtmp)) == sizeof(wtmp))
@@ -72,6 +71,7 @@ static void rmut(struct tab *p)
         }
         close(f);
     }
+
     f = open(wtmpf, 1);
     if (f >= 0)
     {
@@ -198,9 +198,8 @@ static int get()
 
 static int rline()
 {
-    int c, i;
+    int i, c = get();
 
-    c = get();
     if(c < 0)
         return 0;
     if(c == 0)
