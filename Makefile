@@ -1,5 +1,5 @@
 CC=gcc
-CFLAGS=-O2 -o
+CFLAGS=-O2 -ffast-math -o
 
 all: getty init
 
