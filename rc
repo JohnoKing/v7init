@@ -8,14 +8,12 @@ swapon /dev/sda3
 accton /etc/default/acct
 rm -rf /tmp/*
 
-if [ "$(cat /etc/hostname)" != "" ]
-then
-    hostname $(cat /etc/hostname)
-else
+if [ ! -e /etc/hostname ] || [ "$(cat /etc/hostname)" = "" ]; then
     hostname localhost
+else
+    hostname $(cat /etc/hostname)
 fi
 
-if [ -e /etc/rc.d ]
-then
+if [ -e /etc/rc.d ]; then
 	sh /etc/rc.d/*.sh
 fi
