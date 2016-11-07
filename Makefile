@@ -19,3 +19,5 @@ clean:
 	rm -f getty init
 
 clobber: clean
+
+mrproper: clean
