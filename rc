@@ -2,7 +2,6 @@
 
 echo "V7 Init on $(uname -sm)" > /dev/console
 PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin
-rm /etc/mtab
 mount /dev/sda2 /
 mount /dev/sda1 /boot
 swapon /dev/sda3
