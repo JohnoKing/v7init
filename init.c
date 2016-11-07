@@ -15,7 +15,6 @@
 
 #define TABSIZ 100
 #define ALL p = &itab[0]; p < &itab[TABSIZ]; p++
-#define EVER ;;
 
 static char shell[] = "/bin/sh";
 static char getty[] = "/sbin/getty";
@@ -283,7 +282,7 @@ static void multiple()
     struct tab *p;
     int pid;
 
-    for(EVER)
+    for(;;)
     {
         pid = wait((int *)0);
         if(pid == -1)
@@ -303,7 +302,7 @@ int main()
 {
     setjmp(sjbuf);
     signal(SIGHUP, (void *)reset);
-    for(EVER)
+    for(;;)
     {
         shutdown();
         single();
