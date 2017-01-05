@@ -2,8 +2,7 @@
  * getty.h
  */
 
-struct sgetty
-{
+struct sgetty {
     char sg_ispeed; // input speed
     char sg_ospeed; // output speed
     char sg_erase; // erase character
@@ -15,7 +14,7 @@ struct sgetty
 #define CRMOD 020
 #define B300 7
 
-// some tty ioctl commands
-#define TIOCGETP (('t'<<8)|8)
-#define TIOCSETP (('t'<<8)|9)
-#define TIOCSETC (('t'<<8)|17)
+// Some tty ioctl commands
+#define TIOCGETP (('t' << 8) | 8)
+#define TIOCSETP (('t' << 8) | 9)
+#define TIOCSETC (('t' << 8) | 17)
