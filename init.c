@@ -52,7 +52,7 @@ static int reset(void)
     longjmp(sjbuf, 1);
 }
 
-static void rmut(struct tab* p)
+static void rmut(struct tab *p)
 {
     int i, f = open(utmp, 2);
 
@@ -84,7 +84,7 @@ static void rmut(struct tab* p)
     }
 }
 
-static void term(struct tab* p)
+static void term(struct tab *p)
 {
     if (p->pid != 0) {
         rmut(p);
@@ -97,7 +97,7 @@ static void term(struct tab* p)
 static void shutdown(void)
 {
     int i;
-    struct tab* p;
+    struct tab *p;
 
     signal(SIGINT, SIG_IGN);
     for (ALL)
@@ -160,7 +160,7 @@ static void maktty(char *lin)
     tty[i] = 0;
 }
 
-static void dfork(struct tab* p)
+static void dfork(struct tab *p)
 {
     int pid = fork();
 
@@ -270,7 +270,7 @@ static void merge()
 
 static void multiple(void)
 {
-    struct tab* p;
+    struct tab *p;
     int pid;
 
     for (;;) {
