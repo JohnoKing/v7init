@@ -1,5 +1,5 @@
 /*
- * getty -- adapt to terminal speed on dialup, and call login
+ * getty -- adapt to the terminal speed on dialup, and call login
  */
 
 #include <signal.h>
@@ -7,17 +7,7 @@
 #include <stdlib.h>
 #include <stropts.h>
 #include <unistd.h>
-
 #include "getty.h"
-
-#define EOT 04 // EOT char
-#define ERASE '#'
-#define KILL '@'
-
-static char name[16];
-static int crmod;
-static int upper;
-static int lower;
 
 static int getname(void)
 {
