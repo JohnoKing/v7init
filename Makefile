@@ -1,13 +1,13 @@
 CC=gcc
 CFLAGS=-O2 -ffast-math -o
 
-all: getty init
+all: getty v7init
 
 getty:
 	$(CC) $(CFLAGS) getty getty.c
 
-init:
-	$(CC) $(CFLAGS) init init.c
+v7init:
+	$(CC) $(CFLAGS) v7init v7init.c
 
 install: all
 	mkdir -p $(DESTDIR)/sbin $(DESTDIR)/etc/rc.d
@@ -17,7 +17,7 @@ install: all
 	install -Dm644 ttys $(DESTDIR)/etc
 
 clean:
-	rm -f getty init
+	rm -f getty v7init
 
 clobber: clean
 

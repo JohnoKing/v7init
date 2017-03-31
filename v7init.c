@@ -1,5 +1,5 @@
 /*
- * init -- init program
+ * v7init -- init program from UNIX V7
  */
 
 #include <sys/stat.h>
