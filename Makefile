@@ -16,6 +16,9 @@ install: all
 	install -Dm755 rc ttys rc.status $(DESTDIR)/etc/v7init
 	install -Dm755 services/*.sh $(DESTDIR)/etc/v7init/ne
 
+uninstall:
+	rm -rf /sbin/v7getty /sbin/v7init /sbin/v7srv /etc/v7init
+
 clean:
 	rm -f v7getty v7init
 
