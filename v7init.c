@@ -19,10 +19,10 @@
     p++
 
 static char shell[] = "/bin/sh";
-static char getty[] = "/sbin/getty";
+static char getty[] = "/sbin/v7getty";
 static char minus[] = "-";
-static char runc[] = "/etc/rc";
-static char ifile[] = "/etc/ttys";
+static char runc[] = "/etc/v7init/rc";
+static char ifile[] = "/etc/v7init/ttys";
 static char utmp[] = "/etc/utmp";
 static char wtmpf[] = "/var/log/wtmp";
 static char ctty[] = "/dev/console";

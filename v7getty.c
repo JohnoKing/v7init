@@ -1,5 +1,5 @@
 /*
- * getty -- adapt to the terminal speed on dialup, and call login
+ * v7getty -- adapt to the terminal speed on dialup, and call login
  */
 
 #include <signal.h>
@@ -7,7 +7,7 @@
 #include <stdlib.h>
 #include <stropts.h>
 #include <unistd.h>
-#include "getty.h"
+#include "v7getty.h"
 
 static int getname(void)
 {
