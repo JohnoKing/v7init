@@ -14,6 +14,7 @@ else
     hostname $(cat /etc/hostname)
 fi
 
-if [ -e /etc/v7init/rc.d ]; then
-	sh /etc/v7init/rc.d/*.sh
-fi
+cd /etc/v7init
+for scripts in $(ls .); do
+    sh $scripts
+done
