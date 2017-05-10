@@ -3,6 +3,11 @@
 # A script to enable and disable v7init services.
 #
 
+if [ $(id -u) != 0 ]; then
+    echo "You must run this as root!"
+    exit 1
+fi
+
 cd /etc/v7init
 
 disable()
