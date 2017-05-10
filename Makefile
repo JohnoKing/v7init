@@ -11,13 +11,13 @@ v7init:
 	$(CC) $(CFLAGS) -o v7init v7init.c $(LDFLAGS)
 
 install: all
-	mkdir -p $(DESTDIR)/sbin $(DESTDIR)/etc/v7init/rc.d
-	install -Dm755 v7init v7getty $(DESTDIR)/sbin
-	install -Dm755 rc ttys $(DESTDIR)/etc/v7init
-	install -Dm755 rc.status services/*.sh $(DESTDIR)/etc/v7init/rc.d
+	mkdir -p $(DESTDIR)/sbin $(DESTDIR)/etc/v7init/en $(DESTDIR)/etc/v7init/ne
+	install -Dm755 v7getty v7init v7srv $(DESTDIR)/sbin
+	install -Dm755 rc ttys rc.status $(DESTDIR)/etc/v7init
+	install -Dm755 services/*.sh $(DESTDIR)/etc/v7init/ne
 
 clean:
-	rm -f getty v7init
+	rm -f v7getty v7init
 
 clobber: clean
 

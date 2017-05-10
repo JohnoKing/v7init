@@ -1,0 +1,73 @@
+#!/bin/sh
+#
+# A script to enable and disable v7init services.
+#
+
+cd /etc/v7init
+
+disable()
+{
+    if [ ! -L "en/$1.sh" ]; then
+        if [ -e "ne/$1.sh" ]; then
+            echo "The service $1 is not enabled."
+            exit 0
+        else
+            echo "The service $1 does not exist."
+            exit 1
+        fi
+    fi
+
+    rm "en/$1.sh"
+    echo "The service $1 has been disabled."
+    exit 0
+}
+
+enable()
+{
+    if [ -L "en/$1.sh" ]; then
+        echo "The service $1 has already been enabled."
+        exit 0
+    elif [ ! -e "ne/$1.sh" ]; then
+        echo "The service $1 does not exist."
+        exit 1
+    fi
+
+    ln -s "ne/$1.sh" "en"
+    echo "The service $1 has been enabled."
+    exit 0
+}
+
+usage()
+{
+    echo "Usage: v7srv [-deh] service ..."
+    echo ""
+    echo "  -d, --disable    disable a service"
+    echo "  -e, --enable     enable a service"
+    echo "  -h, --help       display this output"
+    echo ""
+    exit $1
+}
+
+if [ "$2" = "" ]; then
+    usage 1
+fi
+
+case "$1" in
+    -d)
+        disable "$2" ;;
+    --disable)
+        disable "$2" ;;
+    -e)
+        enable "$2" ;;
+    --enable)
+        enable "$2" ;;
+    --help)
+        usage 0 ;;
+    -h)
+        usage 0 ;;
+    *)
+        usage 1 ;;
+esac
+
+# Just in case
+exit 1

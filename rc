@@ -5,7 +5,6 @@ export PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin
 mount /dev/sda2 /
 mount /dev/sda1 /boot
 swapon /dev/sda3
-accton /etc/default/acct
 rm -rf /tmp/*
 
 if [ ! -e /etc/hostname ] || [ "$(cat /etc/hostname)" = "" ]; then
@@ -14,7 +13,7 @@ else
     hostname $(cat /etc/hostname)
 fi
 
-cd /etc/v7init
+cd /etc/v7init/en
 for scripts in $(ls .); do
     sh $scripts
 done
