@@ -1,0 +1,19 @@
+#!/bin/sh
+
+# This must be run as root
+if [ $(id -u) != 0 ]; then
+	echo 'This must be run as root!'
+	exit 1
+fi
+
+# Try to unmount all filesystem
+umount -a
+
+# Trigger the kernel to synchronize the filesystems
+echo s > /proc/sysrq-trigger
+
+# Remount all filesystems read-only
+echo u > /proc/sysrq-trigger
+
+# Shutdown the system
+echo o > /proc/sysrq-trigger
