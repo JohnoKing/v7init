@@ -10,4 +10,5 @@ Just run `make` to build v7init. To install it, run `make install` as root.
 Run `make clean` to clean the directory.
 
 ## Licensing
-This is under Caldera's License, which you can find in Caldera-license.pdf or LICENSE
+This is under Caldera's License, which you can find in Caldera-license.pdf (formatted) 
+and LICENSE (unformatted).

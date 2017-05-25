@@ -13,7 +13,7 @@ v7init:
 install: all
 	mkdir -p $(DESTDIR)/sbin $(DESTDIR)/etc/v7init/en $(DESTDIR)/etc/v7init/ne
 	install -Dm755 v7getty v7init v7poweroff v7srv v7reboot $(DESTDIR)/sbin
-	install -Dm755 rc ttys rc.status $(DESTDIR)/etc/v7init
+	install -Dm755 rc ttys $(DESTDIR)/etc/v7init
 	install -Dm755 services/*.sh $(DESTDIR)/etc/v7init/ne
 
 uninstall:
