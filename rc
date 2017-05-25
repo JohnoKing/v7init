@@ -2,26 +2,26 @@
 
 . /etc/profile
 echo "V7 Init on $(uname -sm)" > /dev/console
-echo "BEGIN: Started V7 Init on $(uname -sm)" > /var/log/v7init.log
 mount -a
-rm -rf /tmp/*
+mount -o remount,rw / # The kernel mounts the root filesystem as read-only, don't want that
+echo "BEGIN: Started V7 Init on $(uname -sm)" > /var/log/v7init.log
+echo "info:  Filesystems are now mounted" >> /var/log/v7init.log
 
 if [ ! -e /etc/hostname ] || [ "$(cat /etc/hostname)" = "" ]; then
     hostname localhost
 else
-    hostname $(cat /etc/hostname)
+    hostname `cat /etc/hostname`
 fi
 
-cd /etc/v7init/en
-for scripts in $(ls .); do
-    . $scripts
+for scripts in `ls /etc/v7init/en`; do
+    . /etc/v7init/en/$scripts
     echo "Starting ${NAME}..." > /dev/console
-    echo "info: Starting ${NAME}" >> /var/log/v7init.log
+    echo "info:  Starting ${NAME}" >> /var/log/v7init.log
     start
     if [ $? != 0 ]; then
         echo "error: ${NAME} failed to start." >> /var/log/v7init.log
         echo "${NAME} failed to start!" > /dev/console
     else
-        echo "success: ${NAME} started successfully." > /dev/console
+        echo "info:  ${NAME} started successfully." > /dev/console
     fi
 done

@@ -12,7 +12,7 @@ cd /etc/v7init
 
 disable()
 {
-    if [ ! -L "en/$1.sh" ]; then
+    if [ ! -e "en/$1.sh" ]; then
         if [ -e "ne/$1.sh" ]; then
             echo "The service $1 is not enabled."
             exit 0
@@ -29,7 +29,7 @@ disable()
 
 enable()
 {
-    if [ -L "en/$1.sh" ]; then
+    if [ -e "en/$1.sh" ]; then
         echo "The service $1 has already been enabled."
         exit 0
     elif [ ! -e "ne/$1.sh" ]; then
@@ -37,7 +37,8 @@ enable()
         exit 1
     fi
 
-    ln -s "ne/$1.sh" "en"
+    link "ne/$1.sh" "en/$1.sh"
+    chmod 0755 "en/$1.sh"
     echo "The service $1 has been enabled."
     exit 0
 }
