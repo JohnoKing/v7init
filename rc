@@ -1,10 +1,11 @@
 #!/bin/sh
 
 . /etc/profile
-echo "V7 Init on $(uname -sm)" > /dev/console
+echo "V7 Init on $(uname -srm)" > /dev/console
 mount -a
+swapon -a
 mount -o remount,rw / # The kernel mounts the root filesystem as read-only, don't want that
-echo "BEGIN: Started V7 Init on $(uname -sm)" > /var/log/v7init.log
+echo "BEGIN: Started V7 Init on $(uname -srm)" > /var/log/v7init.log
 echo "info:  Filesystems are now mounted" >> /var/log/v7init.log
 
 if [ ! -e /etc/hostname ] || [ "$(cat /etc/hostname)" = "" ]; then
