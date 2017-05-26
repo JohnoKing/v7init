@@ -13,11 +13,11 @@ strip:
 	$(STRIP) -s -R .comment -R .note.gnu.build-id v7init
 
 install:
-	mkdir -p $(DESTDIR)/sbin $(DESTDIR)/etc/v7init/en $(DESTDIR)/etc/v7init/ne
+	mkdir -p $(DESTDIR)/etc/v7init/en_srv $(DESTDIR)/sbin
+	cp -r srv $(DESTDIR)/etc/v7init
 	install -Dm755 v7init v7poweroff v7srv v7reboot $(DESTDIR)/sbin
 	install -Dm755 rc $(DESTDIR)/etc/v7init
 	install -Dm644 ttys $(DESTDIR)/etc/v7init
-	install -Dm644 services/*.sh $(DESTDIR)/etc/v7init/ne
 
 uninstall:
 	rm -rf /sbin/v7init /sbin/v7poweroff /sbin/v7srv /sbin/v7reboot /etc/v7init
@@ -26,5 +26,3 @@ clean:
 	rm -f v7init
 
 clobber: clean
-
-mrproper: clean

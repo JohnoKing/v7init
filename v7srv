@@ -12,8 +12,8 @@ cd /etc/v7init
 
 disable()
 {
-    if [ ! -e "en/$1.sh" ]; then
-        if [ -e "ne/$1.sh" ]; then
+    if [ ! -e "en_srv/$1" ]; then
+        if [ -e "srv/$1.sh" ]; then
             echo "The service $1 is not enabled."
             exit 0
         else
@@ -22,23 +22,24 @@ disable()
         fi
     fi
 
-    rm "en/$1.sh"
+    rm "en_srv/$1"
+    chmod 0644 "srv/$1.sh"
     echo "The service $1 has been disabled."
     exit 0
 }
 
 enable()
 {
-    if [ -e "en/$1.sh" ]; then
+    if [ -e "en_srv/$1" ]; then
         echo "The service $1 has already been enabled."
         exit 0
-    elif [ ! -e "ne/$1.sh" ]; then
+    elif [ ! -e "srv/$1.sh" ]; then
         echo "The service $1 does not exist."
         exit 1
     fi
 
-    link "ne/$1.sh" "en/$1.sh"
-    chmod 0755 "en/$1.sh"
+    touch "en_srv/$1"
+    chmod 0755 "srv/$1.sh"
     echo "The service $1 has been enabled."
     exit 0
 }
@@ -74,6 +75,3 @@ case "$1" in
     *)
         usage 1 ;;
 esac
-
-# Just in case
-exit 1

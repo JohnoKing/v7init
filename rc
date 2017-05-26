@@ -27,8 +27,8 @@ sysctl --system
 loadkeys `cat /etc/v7init/kbd.conf`
 
 # Launch the services
-for scripts in `ls /etc/v7init/en`; do
-    . /etc/v7init/en/$scripts
+for s in `ls /etc/v7init/en_srv`; do
+    . /etc/v7init/srv/${s}.sh
     echo "Starting ${NAME}..." > /dev/console
     echo "info:  Starting ${NAME}" >> /var/log/v7init.log
     start

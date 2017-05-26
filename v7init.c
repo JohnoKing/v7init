@@ -18,14 +18,13 @@
     p < &itab[TABSIZ]; \
     p++
 
-static char shell[] = "/bin/sh";
-
 #ifdef AGETTY
 static char getty[] = "/sbin/agetty";
 #else
 static char getty[] = "/sbin/getty";
 #endif
 
+static char shell[] = "/bin/sh";
 static char minus[] = "-";
 static char runc[] = "/etc/v7init/rc";
 static char ifile[] = "/etc/v7init/ttys";
