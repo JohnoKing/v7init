@@ -1,6 +1,6 @@
 CC = cc
 CFLAGS = -O2 -ffast-math -ftree-vectorize -fomit-frame-pointer -frename-registers -fweb -flto -fuse-linker-plugin
-LDFLAGS = -Wl,--sort-common,--hash-style=gnu $(CFLAGS)
+LDFLAGS = -Wl,--sort-common,--as-needed,--hash-style=gnu,-O1 $(CFLAGS)
 STRIP= strip
 
 all: v7getty v7init

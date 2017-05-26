@@ -113,24 +113,6 @@ static void shutdown(void)
         close(i);
 }
 
-static void single(void)
-{
-    int pid = fork();
-
-    if (pid == 0) {
-        signal(SIGHUP, SIG_DFL);
-        signal(SIGINT, SIG_DFL);
-        signal(SIGALRM, SIG_DFL);
-        open(ctty, 2);
-        dup(0);
-        dup(0);
-        execl(shell, minus, (char*)0);
-        exit(0);
-    }
-    while (wait((int*)0) != pid)
-        ;
-}
-
 static void runcom(void)
 {
     int pid = fork();
@@ -291,7 +273,6 @@ int main(void)
     signal(SIGHUP, (void*)reset);
     for (;;) {
         shutdown();
-        single();
         runcom();
         merge();
         multiple();
