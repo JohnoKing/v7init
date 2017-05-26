@@ -14,6 +14,9 @@ else
     hostname `cat /etc/hostname`
 fi
 
+# Load all sysctl settings
+sysctl --system
+
 for scripts in `ls /etc/v7init/en`; do
     . /etc/v7init/en/$scripts
     echo "Starting ${NAME}..." > /dev/console

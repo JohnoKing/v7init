@@ -6,7 +6,7 @@ if [ $(id -u) != 0 ]; then
 	exit 1
 fi
 
-# Try to unmount all filesystem
+# Try to unmount all filesystems
 umount -rat nodevtmpfs,nodebugfs,notmpfs,noproc,nosysfs
 swapoff -a
 
