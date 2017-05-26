@@ -1,13 +1,19 @@
 #!/bin/sh
 
+# Begin by sourcing /etc/profile, and mounting the filesystems
 . /etc/profile
 echo "V7 Init on $(uname -srm)" > /dev/console
 mount -a
 swapon -a
-mount -o remount,rw / # The kernel mounts the root filesystem as read-only, don't want that
+
+# Remount as read write
+mount -o remount,rw /
+
+# Start logging
 echo "BEGIN: Started V7 Init on $(uname -srm)" > /var/log/v7init.log
 echo "info:  Filesystems are now mounted" >> /var/log/v7init.log
 
+# Set the hostname
 if [ ! -e /etc/hostname ] || [ "$(cat /etc/hostname)" = "" ]; then
     hostname localhost
 else
@@ -17,6 +23,10 @@ fi
 # Load all sysctl settings
 sysctl --system
 
+# Load the keyboard layout.
+loadkeys `cat /etc/v7init/kbd.conf`
+
+# Launch the services
 for scripts in `ls /etc/v7init/en`; do
     . /etc/v7init/en/$scripts
     echo "Starting ${NAME}..." > /dev/console

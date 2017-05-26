@@ -1,5 +1,5 @@
 CC = cc
-CFLAGS = -O2 -ffast-math -fomit-frame-pointer -frename-registers -fweb -flto -fuse-linker-plugin
+CFLAGS = -O2 -ffast-math -ftree-vectorize -fomit-frame-pointer -frename-registers -fweb -flto -fuse-linker-plugin
 LDFLAGS = -Wl,--sort-common,--hash-style=gnu $(CFLAGS)
 STRIP= strip
 
