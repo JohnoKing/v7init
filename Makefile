@@ -1,6 +1,7 @@
 CC = cc
 CFLAGS = -O2 -ffast-math -fomit-frame-pointer -frename-registers -fweb -flto -fuse-linker-plugin
 LDFLAGS = -Wl,--sort-common,--hash-style=gnu $(CFLAGS)
+STRIP= strip
 
 all: v7getty v7init
 
@@ -9,6 +10,9 @@ getty:
 
 v7init:
 	$(CC) $(CFLAGS) -o v7init v7init.c $(LDFLAGS)
+
+strip:
+	$(STRIP) -s -R .comment -R .note.gnu.build-id v7getty v7init
 
 install: all
 	mkdir -p $(DESTDIR)/sbin $(DESTDIR)/etc/v7init/en $(DESTDIR)/etc/v7init/ne
