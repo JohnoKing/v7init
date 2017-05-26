@@ -5,8 +5,7 @@ This is an experimental port of the init program from Version 7 Unix to Linux.
 Use it at your own risk.
 
 ## Building
-Just run `make` to build v7init. To install it, run `make install` as root. 
-
+Just run `make` to build v7init. If you wish to make the binary smaller, run `make strip`. Then, to install it run `make install` as root. 
 Run `make clean` to clean the directory.
 
 ## Licensing

@@ -19,7 +19,13 @@
     p++
 
 static char shell[] = "/bin/sh";
-static char getty[] = "/sbin/v7getty";
+
+#ifdef AGETTY
+static char getty[] = "/sbin/agetty";
+#else
+static char getty[] = "/sbin/getty";
+#endif
+
 static char minus[] = "-";
 static char runc[] = "/etc/v7init/rc";
 static char ifile[] = "/etc/v7init/ttys";
