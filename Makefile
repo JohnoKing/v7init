@@ -4,9 +4,7 @@ CPPFLAGS = -DAGETTY
 LDFLAGS = -Wl,--sort-common,--as-needed,--hash-style=gnu,-O1 $(CFLAGS)
 STRIP = strip
 
-all: v7init
-
-v7init:
+all:
 	$(CC) $(CFLAGS) $(CPPFLAGS) -o v7init v7init.c $(LDFLAGS)
 
 strip:

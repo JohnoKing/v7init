@@ -13,17 +13,19 @@ mount -o remount,rw /
 echo "BEGIN: Started V7 Init on $(uname -srm)" > /var/log/v7init.log
 echo "info:  Filesystems are now mounted" >> /var/log/v7init.log
 
+# Load all sysctl settings
+sysctl --system
+
 # Set the hostname
 if [ -e /etc/hostname ] || [ "$(cat /etc/hostname)" != "" ]; then
     hostname `cat /etc/hostname`
+    echo "info:  Hostname set to `cat /etc/hostname`" >> /var/log/v7init.log
 fi
-
-# Load all sysctl settings
-sysctl --system
 
 # Load the keyboard layout.
 if [ -e /etc/v7init/kbd.conf ] || [ "$(cat /etc/v7init/kbd.conf)" != "" ]; then
     loadkeys `cat /etc/v7init/kbd.conf`
+    echo "info:  Set the keyboard layout to `cat /etc/v7init/kbd.conf`" >> /var/log/v7init.log
 fi
 
 # Launch the services
