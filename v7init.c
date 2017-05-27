@@ -3,7 +3,6 @@
  */
 
 #include <sys/stat.h>
-#include <sys/types.h>
 #include <sys/wait.h>
 #include <fcntl.h>
 #include <setjmp.h>
@@ -17,6 +16,7 @@
     p = &itab[0];      \
     p < &itab[TABSIZ]; \
     p++
+#define ever ;;
 
 #ifdef AGETTY
 static char getty[] = "/sbin/agetty";
@@ -259,7 +259,7 @@ static void multiple(void)
     struct tab *p;
     int pid;
 
-    for (;;) {
+    for(ever) {
         pid = wait((int*)0);
         if (pid == -1)
             return;
@@ -276,7 +276,7 @@ int main(void)
 {
     setjmp(sjbuf);
     signal(SIGHUP, (void*)reset);
-    for (;;) {
+    for(ever) {
         shutdown();
         runcom();
         merge();

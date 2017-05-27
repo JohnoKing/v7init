@@ -7,15 +7,15 @@ if [ $(id -u) != 0 ]; then
 fi
 
 # Try to unmount all filesystems
+mount  -fo remount,ro /
 umount -rat nodevtmpfs,nodebugfs,notmpfs,noproc,nosysfs
 swapoff -a
 
-# Trigger the kernel to synchronize the filesystems
-echo s > /proc/sysrq-trigger
-
 # Remount all filesystems read-only
 echo u > /proc/sysrq-trigger
-mount -fo remount,ro /
+
+# Trigger the kernel to synchronize the filesystems
+echo s > /proc/sysrq-trigger
 
 # Shutdown the system
 echo o > /proc/sysrq-trigger
