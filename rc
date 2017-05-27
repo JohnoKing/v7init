@@ -14,9 +14,7 @@ echo "BEGIN: Started V7 Init on $(uname -srm)" > /var/log/v7init.log
 echo "info:  Filesystems are now mounted" >> /var/log/v7init.log
 
 # Set the hostname
-if [ ! -e /etc/hostname ] || [ "$(cat /etc/hostname)" = "" ]; then
-    hostname localhost
-else
+if [ -e /etc/hostname ] || [ "$(cat /etc/hostname)" != "" ]; then
     hostname `cat /etc/hostname`
 fi
 
@@ -24,7 +22,9 @@ fi
 sysctl --system
 
 # Load the keyboard layout.
-loadkeys `cat /etc/v7init/kbd.conf`
+if [ -e /etc/v7init/kbd.conf ] || [ "$(cat /etc/v7init/kbd.conf)" != "" ]; then
+    loadkeys `cat /etc/v7init/kbd.conf`
+fi
 
 # Launch the services
 for s in `ls /etc/v7init/en_srv`; do
