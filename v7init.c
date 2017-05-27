@@ -98,26 +98,6 @@ static void term(struct tab *p)
     p->line[0] = 0;
 }
 
-static void shutdown(void)
-{
-    int i;
-    struct tab *p;
-
-    signal(SIGINT, SIG_IGN);
-    for (ALL)
-        term(p);
-    signal(SIGALRM, (void*)reset);
-    alarm(60);
-    for (i = 0; i < 5; i++)
-        kill(-1, SIGKILL);
-    while (wait((int*)0) != -1)
-        ;
-    alarm(0);
-    signal(SIGALRM, SIG_DFL);
-    for (i = 0; i < 10; i++)
-        close(i);
-}
-
 static void runcom(void)
 {
     int pid = fork();
@@ -277,7 +257,6 @@ int main(void)
     setjmp(sjbuf);
     signal(SIGHUP, (void*)reset);
     for(ever) {
-        shutdown();
         runcom();
         merge();
         multiple();
