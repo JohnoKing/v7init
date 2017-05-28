@@ -17,13 +17,13 @@ echo "info:  Filesystems are now mounted" >> /var/log/v7init.log
 sysctl --system
 
 # Set the hostname
-if [ -e /etc/hostname ] || [ "$(cat /etc/hostname)" != "" ]; then
+if [ -e /etc/hostname ] && [ "$(cat /etc/hostname)" != "" ]; then
     hostname `cat /etc/hostname`
     echo "info:  Hostname set to `cat /etc/hostname`" >> /var/log/v7init.log
 fi
 
 # Load the keyboard layout.
-if [ -e /etc/v7init/kbd.conf ] || [ "$(cat /etc/v7init/kbd.conf)" != "" ]; then
+if [ -e /etc/v7init/kbd.conf ] && [ "$(cat /etc/v7init/kbd.conf)" != "" ]; then
     loadkeys `cat /etc/v7init/kbd.conf`
     echo "info:  Set the keyboard layout to `cat /etc/v7init/kbd.conf`" >> /var/log/v7init.log
 fi
