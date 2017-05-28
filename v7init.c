@@ -31,22 +31,21 @@ static char runc[] = "/etc/v7init/rc";
 static char ifile[] = "/etc/v7init/ttys";
 static char utmp[] = "/etc/utmp";
 static char wtmpf[] = "/var/log/wtmp";
-static char ctty[] = "/dev/console";
 static char dev[] = "/dev/";
 
 struct utmp static wtmp;
 
-struct {
+static struct {
     char line[8];
     char comn;
     char flag;
-} static line;
+} line;
 
-struct tab {
+static struct tab {
     char line[8];
     char comn;
     int pid;
-} static itab[TABSIZ];
+} itab[TABSIZ];
 
 static int fi;
 static char tty[20];
