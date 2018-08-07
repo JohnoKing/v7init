@@ -1,6 +1,6 @@
 v7init
 ===============
-
+**The primary repo has been moved to https://gitlab.com/JohnoKing/v7init**
 This is an experimental port of the init program from Version 7 Unix to Linux. 
 Use it at your own risk.
 
